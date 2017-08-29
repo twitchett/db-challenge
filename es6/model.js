@@ -1,20 +1,39 @@
 const data = []
 
-function addItem (item) {
+function addItem (item, shift) {
     let idx = data.findIndex(i => i.name === item.name)
-    if (idx === -1) {
-        data.push(item)
+    if (exists(idx)) {
+        data[idx] = updateItem(item, data[idx], shift)
     } else {
-        data[idx] = item
+        data.push(createNewItem(item))
     }
 }
 
-function sortData () {
-    data.sort((a, b) =>  b.lastChangeBid - a.lastChangeBid)
+function createNewItem (item) {
+    item.midprices = [calculateMidprice(item)]
+    return item
 }
 
-function getData () {
-    return data
+function updateItem (newItem, oldItem, shift) {
+    newItem.midprices = oldItem.midprices
+    newItem.midprices.push(calculateMidprice(newItem))
+    if (shift) {
+        console.log('shift is true!')
+        newItem.midprices.shift()
+    }
+    return newItem
 }
 
-export default { addItem, sortData, getData }
+function calculateMidprice (item) {
+    return (item.bestBid + item.bestAsk) / 2
+}
+
+function getSortedData () {
+    return data.sort((a, b) => b.lastChangeBid - a.lastChangeBid)
+}
+
+function exists (idx) {
+    return idx !== -1
+}
+
+export default { addItem, getSortedData }

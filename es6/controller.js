@@ -1,53 +1,82 @@
 const TOTAL_ROWS = 12
 const PRECISION = 6
-const COLUMN_MAPPING = {
-    0: "name",
-    1: "bestBid",
-    2: "bestAsk",
-    3: "lastChangeBid",
-    4: "lastChangeAsk",
-    5: "openBid",
-    6: "openAsk"
-}
+const COLUMNS = [
+    "name",
+    "bestBid",
+    "bestAsk",
+    "lastChangeBid",
+    "lastChangeAsk",
+    "openBid",
+    "openAsk",
+    "midprices"
+]
 
 function initializeTable () {
-    let table = document.getElementById("table")
+    const table = document.getElementById("table")
     Array(TOTAL_ROWS)
         .fill()
         .forEach(item => table.append(createEmptyRow()))
 }
 
 function createEmptyRow () {
-    let row = document.createElement("tr")
+    const row = document.createElement("tr")
+    const spark = document.createElement("span")
+    spark.className = "spark"
     row.className = "row"
-    Object.keys(COLUMN_MAPPING).forEach(_ => {
-        row.append(document.createElement("td"))
+    COLUMNS.forEach(col => {
+        const cell = document.createElement("td")
+        if (col === "midprices") {
+            cell.append(spark.cloneNode())
+        }
+        row.append(cell)
     })
     return row
 }
 
-function updateValues (data) {
-    let tableRows = table.getElementsByClassName("row")
+function updateTable (data) {
+    const tableRows = table.getElementsByClassName("row")
     data.forEach((values, i) => {
-        setValues(tableRows[i], values)
+        setRowValues(tableRows[i], values)
     })
 }
 
-function setValues (row, data) {
+function setRowValues (row, values) {
     let cells = row.getElementsByTagName("td")
-    Array.from(cells)
-        .forEach((cell, i) => {
-            cells[i].innerHTML = getValueForColumn(i, data)
-        })
+    COLUMNS.forEach((col, i) => {
+        setCellContent(cells[i], values[col], col)
+        // cells[i].innerHTML = getValueForColumn(col, values)
+    })
 }
 
-function getValueForColumn (col, data) {
-    let key = COLUMN_MAPPING[col]
-    if (key !== "name") {
-        return parseFloat(data[key]).toFixed(PRECISION)
+function setCellContent (cell, value, col) {
+    if (col === "name") {
+        cell.innerHTML = value
+    } else if (col === "midprices") {
+        updateSpark(cell, value)
     } else {
-        return data[key]
+        // everything else is a float, return in a readable format
+        cell.innerHTML = parseFloat(value).toFixed(PRECISION)
     }
 }
 
-export default { initializeTable, updateValues }
+function updateSpark (cell, value) {
+    const [spark] = cell.getElementsByClassName("spark")
+    Sparkline.draw(spark, value)
+}
+
+// function getValueForColumn (col, value) {
+//     if (col === "name") {
+//         return value
+//     }
+//     if (col === "midprices") {
+//         const sparkElement = document.createElement('span')
+//         // const sparkline = new Sparkline(sparkElement)
+//         // sparkline.draw([1,2,3,4,5,6])
+//         Sparkline.draw(sparkElement, [1,2,3,4,5])
+//         return sparkElement.outerHTML
+//     }
+//     // everything else is a float, return in a readable format
+//     return parseFloat(value).toFixed(PRECISION)
+// }
+
+export default { initializeTable, updateTable }
