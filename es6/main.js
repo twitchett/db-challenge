@@ -3,29 +3,19 @@ import model from "./model.js"
 
 const STOMP_SERVER_URL = "ws://localhost:8011/stomp"
 const PRICES_ENDPOINT = "/fx/prices"
-
-
 const client = Stomp.client(STOMP_SERVER_URL)
-client.debug = function(msg) {
-  if (global.DEBUG) {
-    console.info(msg)
-  }
-}
-
-
 
 function connectHandler() {
     controller.initializeTable()
+    let subscription = client.subscribe(PRICES_ENDPOINT, pricesResponseHandler)
+    // TODO: unsubscribe
+}
 
-    let subscription = client.subscribe(PRICES_ENDPOINT, function (response) {
-        let body = JSON.parse(response.body)
-        // console.log(body)
-        // let row = document.getElementById(body.name)
-
-        model.addItem(body)
-
-        controller.refreshTable(model.getData())
-    })
+function pricesResponseHandler(response) {
+    let body = JSON.parse(response.body)
+    model.addItem(body)
+    model.sortData()
+    controller.updateValues(model.getData())
 }
 
 function errorHandler(error) {
@@ -33,5 +23,11 @@ function errorHandler(error) {
 }
 
 client.connect({}, connectHandler, errorHandler)
+
+client.debug = function(msg) {
+    if (global.DEBUG) {
+        console.info(msg)
+    }
+}
 
 export { client }

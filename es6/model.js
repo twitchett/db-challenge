@@ -1,6 +1,5 @@
 const data = []
 
-
 function addItem (item) {
     let idx = data.findIndex(i => i.name === item.name)
     if (idx === -1) {
@@ -8,12 +7,14 @@ function addItem (item) {
     } else {
         data[idx] = item
     }
+}
 
-    data.sort((a, b) =>  a.lastChangeBid < b.lastChangeBid)
+function sortData () {
+    data.sort((a, b) =>  b.lastChangeBid - a.lastChangeBid)
 }
 
 function getData () {
     return data
 }
 
-export default { addItem, getData }
+export default { addItem, sortData, getData }
