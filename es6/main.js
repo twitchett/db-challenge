@@ -17,8 +17,8 @@ function connectHandler () {
 
 function pricesResponseHandler (model, controller, response) {
     const body = JSON.parse(response.body)
-    model.addItem(body)
-    controller.updateTable(model.getSortedData())
+    model.setItem(body)
+    controller.updateTable(model.getData())
 }
 
 function errorHandler (error) {
