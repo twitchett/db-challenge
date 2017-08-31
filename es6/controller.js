@@ -1,3 +1,5 @@
+import Sparkline from "../site/sparkline.js"
+
 class Controller {
 
     constructor ({ TOTAL_ROWS = 12, PRECISION = 6 } = {}) {

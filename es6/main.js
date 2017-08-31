@@ -1,3 +1,4 @@
+import { Stomp } from "../site/stomp.js"
 import Controller from "./controller.js"
 import Model from "./model.js"
 
@@ -21,8 +22,8 @@ function pricesResponseHandler (model, controller, response) {
 }
 
 function errorHandler (error) {
-  console.error('Stomp client error', error)
-  alert(error)
+    conole.error('Stomp client error', error)
+    alert(error)
 }
 
 client.connect({}, connectHandler, errorHandler)
