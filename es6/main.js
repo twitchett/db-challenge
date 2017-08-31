@@ -1,26 +1,28 @@
-import controller from "./controller.js"
-import model from "./model.js"
+import Controller from "./controller.js"
+import Model from "./model.js"
 
 const STOMP_SERVER_URL = "ws://localhost:8011/stomp"
 const PRICES_ENDPOINT = "/fx/prices"
+const PERIOD = 30
 
 const client = Stomp.client(STOMP_SERVER_URL)
 
 function connectHandler () {
-    controller.initializeTable()
-    let subscription = client.subscribe(PRICES_ENDPOINT, pricesResponseHandler)
+    const controller = new Controller()
+    const model = new Model(PERIOD)
+    client.subscribe(PRICES_ENDPOINT, pricesResponseHandler.bind(null, model, controller))
     // TODO: unsubscribe
 }
 
-function pricesResponseHandler (response) {
-    let body = JSON.parse(response.body)
+function pricesResponseHandler (model, controller, response) {
+    const body = JSON.parse(response.body)
     model.addItem(body)
-    model.sortData()
-    controller.updateValues(model.getData())
+    controller.updateTable(model.getSortedData())
 }
 
 function errorHandler (error) {
-  alert(error.headers.message)
+  console.error('Stomp client error', error)
+  alert(error)
 }
 
 client.connect({}, connectHandler, errorHandler)
