@@ -1,101 +1,74 @@
 import Sparkline from "../site/sparkline.js"
 
+/*
+* A class to manage the HTML prices table.
+*/
 class Controller {
 
-    constructor ({ TOTAL_ROWS = 12, PRECISION = 6 } = {}) {
-        this.sparklines = {}
-        this.TOTAL_ROWS = TOTAL_ROWS    // number of rows to generate
-        this.PRECISION = PRECISION      // number of decimal places to display for value cells
-        this.COLUMNS = [                // data keys mapping to the table headers (note order must match)
-            "name",
-            "bestBid",
-            "bestAsk",
-            "lastChangeBid",
-            "lastChangeAsk",
-            "openBid",
-            "openAsk",
-            "midprices"
-        ]
-        this.table = document.getElementById("table")
-        this.initializeEmptyTable()
+    /*
+    * Creates the empty HTML table. After calling the constructor, data can be populated
+    * using updateTable().
+    * 
+    * @param {string} tableId - the id of the HTML Table element on the page (must exist already)
+    * @param {number} COLUMNS - data keys mapping to the table headers
+    * @param {number} TOTAL_ROWS - the number of rows in the table
+    * @param {number} PRECISION - the number of decimal places to display numerical values
+    */
+    constructor ({ tableId, COLUMNS, TOTAL_ROWS = 12, PRECISION = 5 } = {}) {
+        const table = document.getElementById(tableId)
+        if (!table || !COLUMNS) {
+            throw new Error("Columns not provided, or Table element not found")
+        }
+        this.PRECISION = PRECISION
+        this.TOTAL_ROWS = TOTAL_ROWS -1  // there's one already, so subtract 1
+        this.COLUMNS = COLUMNS
+        this._table = table
+        this._initializeEmptyTable()
     }
 
-    initializeEmptyTable () {
-        const [row] = this.table.getElementsByClassName("row")
+    _initializeEmptyTable () {
+        const [row] = this._table.getElementsByClassName("row")
         Array(this.TOTAL_ROWS)
             .fill()
             .forEach(_ => { row.insertAdjacentElement("afterend", row.cloneNode(true)) }) // true -> clone deep
     }
 
+    /*
+    * Populates the table with values. Data must be an array of objects; 
+    * the object properties must correspond to the table columns.
+    */
     updateTable (data) {
-        const tableRows = this.table.getElementsByClassName("row")
+        const tableRows = this._table.getElementsByClassName("row")
         data.forEach((values, i) => {
-            let { name, midprices } = values
-            this.updateRowValues(tableRows[i], values) // TODO: don't set spark cell
-            // this.updateSparkline(tableRows[i], name, midprices)
+            if (i >= tableRows.length) {
+                throw new Error("Number of data elements exceeds number of table rows")
+            }
+            this._updateRowValues(tableRows[i], values)
         })
     }
 
-    updateRowValues (row, values) {
-        // const c1 = row.querySelectorAll('.name, .value')
-        let cells = row.getElementsByTagName("td")
+    _updateRowValues (row, values) {
+        // TODO: validate input
+        const cells = row.getElementsByTagName("td")
         this.COLUMNS.forEach((col, i) => {
-            // if (col !== "midprices") {
-                this.setCellContent(cells[i], values[col], col)
-                // cells[i].innerHTML = this.getValueForColumn(col, values[col])
-            // }
+            this._setCellContent(cells[i], values[col], col)
         })
     }
 
-    setCellContent (cell, value, col) {
+    _setCellContent (cell, value, col) {
         if (col === "name") {
-            cell.innerHTML = value
+            cell.firstElementChild.innerHTML = value
         } else if (col === "midprices") {
-            this.updateSpark(cell, value)
+            this._updateSparkline(cell, value)
         } else {
-            // everything else is a float, return in a readable format
-            cell.innerHTML = parseFloat(value).toFixed(this.PRECISION)
+            cell.firstElementChild.innerHTML = parseFloat(value).toFixed(this.PRECISION)
         }
     }
 
-    updateSpark (cell, midprices) {
-        // let { name, midprices } = values
-        // let sparkline = this.sparklines[name]
-        // if (!sparkline) {
-        //     let [el] = cell.getElementsByClassName("sparkline")
-        //     sparkline = new Sparkline(el)
-        //     this.sparklines[name] = sparkline
-        // }
-        // sparkline.draw(midprices)
+    _updateSparkline (cell, midprices) {
         const [spark] = cell.getElementsByClassName("sparkline")
-        Sparkline.draw(spark, midprices)
-    }
-
-    getValueForColumn (col, value) {
-        if (col === "name") {
-            return value
-        }
-        // everything else is a float, return in a readable format
-        return parseFloat(value).toFixed(this.PRECISION)
-    }
-
-    updateSparkline (row, name, midprices) {
-        const [spark] = cell.getElementsByClassName("sparkline")
-        Sparkline.draw(spark, values)
-        // console.log('row',row)
-        // console.log(name, midprices)
-        // let sparkline = this.sparklines[name]
-        // if (!sparkline) {
-        //     // TODO it would be nice to have a single condition for checking
-        //     //
-        //     let el = row.querySelector(".sparkline")
-        //     // console.log('el', el)
-        //     sparkline = new Sparkline(el)
-        // }
-        // sparkline.draw(midprices)
-        // this.sparklines[name] = sparkline
+        Sparkline.draw(spark, midprices.get())
     }
 }
-
 
 export default Controller
