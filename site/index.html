@@ -102,7 +102,7 @@
     <h3>Additional development steps</h3>
 
     <p>
-        Unit tests have been written using <a href="http://npmjs.org/package/tape" target="_blank">tape</a> and can be found under the /test folder. Run them using:
+        Unit tests have been written using <a href="http://npmjs.org/package/tape" target="_blank">tape</a> and can be found under the /test folder. They can be run using:
     </p>
 
     <pre>npm test</pre>
@@ -111,13 +111,17 @@
         As this is intended as a demo app, I've included tests only for the Model and Midprices classes, but would be happy to discuss how I'd go about testing the rest of the code.
     </p>
 
+    <p>
+        Please note: I'm running the tests under node 6.11.0, but they are being transpiled by babel so there shouldn't be any compatibility issues.
+    </p>
+
     <h3>Improvements</h3>
 
     <p>Third-party frameworks/libraries:</p>
 
     <ul>
         <li>
-            A framework/library that provides data binding, such as <strong>AngularJS</strong> or <strong>React</strong>, would be my number one choice. This means the view would be automatically updated upon model changes, thus allowing the client to be completely decoupled from the controller, enabling an architecture like:
+            A framework/library that provides data binding, such as <strong>AngularJS</strong> or <strong>React</strong>, would be my number one choice. This means the view would be automatically updated upon model changes, thus allowing the client to be completely decoupled from the controller, enabling an architecture like this:
             <pre>
                                             +----------------+                            
                                             |                |                            
@@ -145,7 +149,7 @@
             It would also make the DOM manipulation in the controller easier, and allow conditional logic to be applied to HTML.
         </li>
         <li>A nice-to-have would be some kind of utility library like <strong>Lo-Dash</strong>, for object and array manipulation.</li>
-        <li>If the application was going to be extended with addional components, then some front-end library such as <strong>Bootstrap</strong> or <strong>Semantic UI</strong> would reduce the amount of boilerplate code.</li>
+        <li>If the application was going to be extended with additional components, then some front-end library such as <strong>Bootstrap</strong> or <strong>Semantic UI</strong> would reduce the amount of boilerplate code required.</li>
     </ul>
 
     <p>

@@ -1,6 +1,6 @@
 {
-  "name": "dev-challenge",
-  "version": "1.2.1",
+  "name": "tabi-dev-challenge",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "test": "tape --require babel-register test/*.js | tap-spec"
   },
   "keywords": [],
-  "author": "",
+  "author": "Tabitha Goodall",
   "license": "ISC",
   "devDependencies": {
     "babel-cli": "^6.26.0",

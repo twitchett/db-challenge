@@ -58,7 +58,7 @@ test("getData() returns an empty array if no data has been set", (t) => {
     t.deepEqual((new Model()).getData(), [])
 })
 
-test("getData() always returns sorted data (defaulting to ascending by lastChangeBid)", (t) => {
+test("getData() always returns sorted data (defaulting to descending by lastChangeBid)", (t) => {
     t.plan(2)
     const model = new Model()
     const high = {
