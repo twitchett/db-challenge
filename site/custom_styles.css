@@ -1,0 +1,76 @@
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+    font-family: Tahoma, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+section {
+    width: 80%;
+    margin: auto;
+}
+
+body section::last-child {
+    margin-bottom: 100px;
+    border: 1px solid red;
+}
+
+hr {
+    border-top: 1px solid #ddddee
+}
+
+h1 {
+    display: inline-block;
+    margin: 30px 0;
+}
+
+li {
+    margin: 3px 0;
+}
+
+.candidate_info {
+    float: right;
+    text-align: right;
+    margin-top: 30px;
+}
+
+#table {
+    border: solid 1px #ddddee;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin: 30px 0;
+}
+
+#table th {
+    background-color: #dddfef;
+    border: solid 1px #ddddee;
+    color: #33346b;
+    padding: 10px;
+    text-shadow: 1px 1px 1px #fff;
+}
+
+#table td {
+    border-top: solid 1px #ddddee;
+    border-bottom: solid 1px #ddddee;
+    border-left: none;
+    border-right: none;
+    color: #333;
+    padding: 10px;
+    text-shadow: 1px 1px 1px #fff;
+    width: 150px;
+    height: 29px;
+    font-size: 0.85em;
+}
+
+#table tr {
+  height: 2.8em;   
+}
+
+#table tr:nth-child(even) {
+    background-color: #eeeff7;
+}
+
+#table .name {
+    text-transform: uppercase;
+}

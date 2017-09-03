@@ -1,54 +1,168 @@
 <html>
 <head>
-
+    <title>Tabitha Goodall: Deutsche Bank Dev Challenge</title>
 </head>
 <body>
+
+<section class="header">
+    <h1>Tabitha Goodall: DB Dev Challenge</h1>
+    <div class="candidate_info">
+        <div>email: <a href="mailto:t.goodall@email.com">t.goodall@email.com</a></div>
+        <div>phone: +491575 4697192</div>
+    </div>
+    <hr />
+</section>
 
 <section class="content">
 
     <table id="table">
-        <tr id="table-header">
-            <th>Name</th>
-            <th>Current Best Bid</th>
-            <th>Current Best Ask</th>
-            <th>Best Bid Last Changed</th>
-            <th>Best Ask Last Changed</th>
-            <th>Open Bid</th>
-            <th>Open Ask</th>
-            <th>Midprice</th>
-        </tr>
-        <tr class="row">
-            <td>
-                <span class="name"></span>
-            </td>
-            <td>
-                <span class="value"></span>
-            </td>
-            <td>
-                <span class="value"></span>
-            </td>
-            <td>
-                <span class="value"></span>
-            </td>
-            <td>
-                <span class="value"></span>
-            </td>
-            <td>
-                <span class="value"></span>
-            </td>
-            <td>
-                <span class="value"></span>
-            </td>
-            <td>
-                <span class="sparkline"></span>
-            </td>
-        </tr>
+        <thead>
+            <tr id="table-header">
+                <th>Name</th>
+                <th>Current Best Bid</th>
+                <th>Current Best Ask</th>
+                <th>Last Changed Best Bid</th>
+                <th>Last Changed Best Ask</th>
+                <th>Open Bid</th>
+                <th>Open Ask</th>
+                <th>Midprice</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="row">
+                <td>
+                    <span class="name"></span>
+                </td>
+                <td>
+                    <span class="value"></span>
+                </td>
+                <td>
+                    <span class="value"></span>
+                </td>
+                <td>
+                    <span class="value"></span>
+                </td>
+                <td>
+                    <span class="value"></span>
+                </td>
+                <td>
+                    <span class="value"></span>
+                </td>
+                <td>
+                    <span class="value"></span>
+                </td>
+                <td>
+                    <span class="sparkline"></span>
+                </td>
+            </tr>
+        </tbody>
     </table>
 
 </section>
 
-<!-- Code you write in index.js and anything it depends on will be bundled into bundle.js and
-     is included here -->
+<section class="documentation">
+
+    <h2>Implementation Notes</h2>
+
+    <hr />
+
+    <h3>High-level overview</h3>
+
+    <p>
+        The application is made up of four JS components, plus the HTML template:
+    </p>
+    
+    <ul>
+        <li><b>model.js</b>: holds the data to be displayed in the template</li>
+        <li><b>midprices.js</b>: encapsulates the state and data specific to the "midprices" property. Used by the model.</li>
+        <li><b>controller.js</b>: responsible for manpulation of the DOM and presentation of the data in the template</li>
+        <li><b>main.js</b>: runs the Stomp client, and is responsible for passing the data from the server to the model and controller</li>
+    </ul>
+
+    <pre>
+
+                                               +----------------+                                               
+                                               |                |                                               
+                                               |     Client     |                                               
+                                               |                |                                               
+                                               +----------------+                                               
+                                                  |           |                                                 
+                                                  |           |                                                 
+                                          updates |           | updates                                         
+                                                  |           |                                                 
+                                                  v           v                                                 
+        +--------------+            +---------------+       +---------------+                                   
+        |              |            |               |       |               |                                   
+        |   Midprices  |<-----------|     Model     |       |  Controller   |                                   
+        |              |            |               |       |               |                                   
+        +--------------+            +---------------+       +---------------+                                 
+              
+    </pre>                                                  
+
+    <h3>Additional development steps</h3>
+
+    <p>
+        Unit tests have been written using <a href="http://npmjs.org/package/tape" target="_blank">tape</a> and can be found under the /test folder. Run them using:
+    </p>
+
+    <pre>npm test</pre>
+
+    <p>
+        As this is intended as a demo app, I've included tests only for the Model and Midprices classes, but would be happy to discuss how I'd go about testing the rest of the code.
+    </p>
+
+    <h3>Improvements</h3>
+
+    <p>Third-party frameworks/libraries:</p>
+
+    <ul>
+        <li>
+            A framework/library that provides data binding, such as <strong>AngularJS</strong> or <strong>React</strong>, would be my number one choice. This means the view would be automatically updated upon model changes, thus allowing the client to be completely decoupled from the controller, enabling an architecture like:
+            <pre>
+                                            +----------------+                            
+                                            |                |                            
+                                            |     Client     |                            
+                                            |                |                            
+                                            +----------------+                            
+                                                     |                                     
+                                                     |                                     
+                                             updates |                                     
+                                                     |                                     
+                                                     v                                     
+                 +--------------+            +---------------+            +---------------+
+                 |              |            |               |            |               |
+                 |   Miprices   |<-----------|     Model     |            |  Controller   |
+                 |              |            |               |            |               |
+                 +--------------+            +---------------+            +---------------+
+                                                     |                            ^
+                                                     |                            |
+                                                     |                            |
+                                                     |                            |
+                                                     +-----------------------------
+                                                        updates via data-binding
+                                                                                                    
+            </pre>
+            It would also make the DOM manipulation in the controller easier, and allow conditional logic to be applied to HTML.
+        </li>
+        <li>A nice-to-have would be some kind of utility library like <strong>Lo-Dash</strong>, for object and array manipulation.</li>
+        <li>If the application was going to be extended with addional components, then some front-end library such as <strong>Bootstrap</strong> or <strong>Semantic UI</strong> would reduce the amount of boilerplate code.</li>
+    </ul>
+
+    <p>
+        If I were to spend more time improving the application (/go a little over-the-top), these are some of the things I would do:
+    </p>
+
+    <ul>
+        <li>Write an integration test to verify the client, model, and controller working together correctly - i.e. mock the Stomp server to emit certain data, and make assertions about the DOM based on that data.</li>
+        <li>Pull out all configurable properties (server URL & path, float precision, etc) into a config file that is read at runtime</li>
+        <li>Refactor out domain-specific information from the Midprices class - there's no reason it needs to know the name of the properties in the table, it just needs to average two values and remove old averages.</li>
+        <li>Determine the order of columns programatically, instead of hard-coding them in two locations (the template and the main module)</li>
+        <li>Improve the UX, for example by highlighting the row that was changed on each update</li>
+        <li>Perform more robust error-checking</li>
+    </ul>
+
+</section>
+
 <script src="bundle.js"></script>
 
 </body>
